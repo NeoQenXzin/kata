@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use Stringable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,6 +41,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    /**
+     * @var Collection<int, book>
+     */
+    #[ORM\OneToMany(targetEntity: book::class, mappedBy: 'utilisateur')]
+    private Collection $user_books;
+
+    public function __construct()
+    {
+        $this->user_books = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -133,6 +151,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, book>
+     */
+    public function getUserBooks(): Collection
+    {
+        return $this->user_books;
+    }
+
+    public function addUserBook(book $userBook): static
+    {
+        if (!$this->user_books->contains($userBook)) {
+            $this->user_books->add($userBook);
+            $userBook->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBook(book $userBook): static
+    {
+        if ($this->user_books->removeElement($userBook)) {
+            // set the owning side to null (unless already changed)
+            if ($userBook->getUtilisateur() === $this) {
+                $userBook->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }
