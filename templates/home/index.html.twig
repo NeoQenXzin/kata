@@ -1,25 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
+{% block title %}Kata Homepage
 {% endblock %}
 
 {% block body %}
-	<div class="example-wrapper">
-		<h1>Hello
-			{{ controller_name }}! ✅</h1>
-		<h2>Your Books:</h2>
 
-		{% if books is not empty %}
-			{% for book in books %}
-				<div>
-					<strong>Title:</strong>
-					{{ book.volumeInfo.title }}
-					<strong>Author:</strong>
-					{{ book.volumeInfo.authors|join(', ') }}
+	<h1 class='media-main-title'>
+		Kata Archive Books 📖 🦧📚</h1>
+	<!-- Search bar  -->
+	{% if app.user %}
+		<div class="form-container">
+			<form
+				class='form' method="post" action="">
+				{# <form class='form' method="post" action="{{ path('add_book') }}"> #}
+				<div class="form-field">
+					<label class="input-group__label">Titre</label>
+					<input class="input-group__input" type="text" name="search" placeholder=""/>
+					<label class="input-group__label">Auteur</label>
+					<input class="input-group__input" type="text" name="author" placeholder=""/>
+					<button class='button-search' type="submit">Ajouter un livre</button>
 				</div>
+			</form>
+		</div>
+	{% endif %}
+	{# fin search bar  #}
+
+	<div
+		class="my-medias-container">
+
+		{# <div>{{ dump(books) }}	</div> #}
+		{% if books is not empty %}
+			{% for userbook in books %}
+				{% for book in userbook %}
+					<div class=" book">
+						<div class="title">
+							<p>
+								{{ book.volumeInfo.title }}
+							</p>
+						</div>
+						<div class="book-cover open-modal" data-book-id="{{ book.id }}" style="background: url('{{ book.volumeInfo.imageLinks.thumbnail|default(asset('path_to_default_cover.jpg')) }}'); background-size: 100% 100%; background-repeat: no-repeat;">
+							<div class="effect"></div>
+							<div class="light"></div>
+						</div>
+						<div class="book-inside"></div>
+						<a class="btn" data-toggle="modal" data-target="#modal-{{ book.id }}">">Détail</a>
+					</div>
+
+
+					{# Modal  #}
+					<div class="modal" id="modal-{{ book.id }}" style="display: none;">
+						<div class="modal-content">
+
+							<table class='table-modal neumorphic-card-modal'>
+								<tr class='centre'>
+									<td class='centre modal-title'>
+										{{ book.volumeInfo.title }}
+									</td>
+								</tr>
+								<tr class='centre'>
+									<td class='centre'>
+										<img src="{{ book.volumeInfo.imageLinks.thumbnail|default(asset('path_to_default_cover.jpg')) }}" alt="Couverture du livre" style="max-width: 250px; max-height: 250px; border-radius: 12px">
+									</td>
+								</tr>
+								<tr>
+									<td>Auteur:</td>
+									<td>{{ book.volumeInfo.authors|join(', ')|default('Author not available') }}</td>
+								</tr>
+								<tr>
+									<td>Editeur:</td>
+									<td>{{ book.volumeInfo.publisher|default('Publisher not available') }}</td>
+								</tr>
+								<tr>
+									<td>Année:</td>
+									<td>{{ book.volumeInfo.publishedDate|default('Date not available') }}</td>
+								</tr>
+								<tr>
+									<td>ISBN:</td>
+									<td>{{ book.volumeInfo.industryIdentifiers[0].identifier|default('ISBN not available') }}</td>
+								</tr>
+								<tr>
+									<td>Commentaire:</td>
+									<td>{{ book.volumeInfo.description|default('No description available') }}</td>
+								</tr>
+							</table>
+							<button type="button" class="close-modal neumorphic-btn" onclick="this.closest('.modal').style.display='none'">Fermer</button>
+
+						</div>
+					</div>
+					{# Modal end  #}
+				{% endfor %}
 			{% endfor %}
 		{% else %}
 			<p>No books found.</p>
 		{% endif %}
+
+
 	</div>
 {% endblock %}

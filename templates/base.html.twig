@@ -17,6 +17,12 @@
 		{% endblock %}
 	</head>
 	<body>
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+
 		{% include 'header.html.twig' %}
 
 		{% block body %}{% endblock %}
