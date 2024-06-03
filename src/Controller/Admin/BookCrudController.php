@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Book;
+use DateTime;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -11,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 
 class BookCrudController extends AbstractCrudController
 {
@@ -27,6 +29,11 @@ class BookCrudController extends AbstractCrudController
         yield AssociationField::new('utilisateur');
         yield TextField::new('title');
         yield TextField::new('author');
+        yield DateTimeField::new('publishedAt')->hideOnForm();
+        yield DateTimeField::new('createdAt')->hideOnForm();
+        yield DateTimeField::new('updatedAt')->hideOnForm();
+        yield TextField::new('slug')->hideOnForm();
+        yield TextField::new('isbn')->hideOnForm();
     }
     public function configureCrud(Crud $crud): Crud
     {
