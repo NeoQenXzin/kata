@@ -24,16 +24,22 @@ class GoogleBooksApiService
             [
                 'query' => [
                     'q' => 'intitle:' . urlencode($title) . '+inauthor:' . urlencode($author),
-                    'key' => $this->apiKey
+                    'key' => $this->apiKey,
+                    'maxResults' => 10, // Augmentez le nombre de résultats récupérés pour avoir plus de choix
+                    'langRestrict' => 'fr'
                 ]
             ]
         );
 
         $data = $response->toArray(); // Convert the response to an array
 
-        // Check if 'items' key exists
+        // Check if 'items' key exists and filter books with image links
         if (array_key_exists('items', $data)) {
-            return $data['items'];
+            $filteredBooks = array_filter($data['items'], function ($item) {
+                return isset($item['volumeInfo']['imageLinks']['thumbnail']); // Assurez-vous que l'entrée dispose d'un lien vers une image
+            });
+
+            return array_slice($filteredBooks, 0, 1); // Retourne uniquement le premier résultat avec une image
         } else {
             // Handle the case where no items are found
             return [];

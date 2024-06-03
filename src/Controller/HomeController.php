@@ -52,33 +52,33 @@ class HomeController extends AbstractController
         ]);
     }
 
-    // #[Route('/add-book', name: 'add_book', methods: ['POST'])]
-    // public function addBook(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $title = $request->request->get('title');
-    //     $author = $request->request->get('author');
-    //     $utilisateur = $this->security->getUser();
+    #[Route('/add-book', name: 'add_book', methods: ['POST'])]
+    public function addBook(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $title = $request->request->get('title');
+        $author = $request->request->get('author');
+        $utilisateur = $this->security->getUser();
 
-    //     $bookDetails = $this->googleBooksApiService->findBookByTitleAndAuthor($title, $author);
+        $bookDetails = $this->googleBooksApiService->findBookByTitleAndAuthor($title, $author);
 
-    //     if (!$bookDetails) {
-    //         $this->addFlash('error', 'Aucun livre trouvé avec ce titre et auteur.');
-    //         return $this->redirectToRoute('homepage');
-    //     }
+        if (!$bookDetails) {
+            $this->addFlash('error', 'Aucun livre trouvé avec ce titre et auteur.');
+            return $this->redirectToRoute('homepage');
+        }
+        var_dump($bookDetails);
+        foreach ($bookDetails as $bookData) {
+            $book = new Book();
+            $book->setTitle($bookData['title']);
 
-    //     foreach ($bookDetails as $bookData) {
-    //         $book = new Book();
-    //         $book->setTitle($bookData['title']);
-    //         // Prend le premier auteur s'il existe, sinon attribue "Auteur inconnu"
-    //         $book->setAuthor($bookData['authors'][0] ?? 'Auteur inconnu');
-    //         $book->setUtilisateur($utilisateur);
+            $book->setAuthor($bookData['authors'] ?? 'Auteur inconnu');
+            $book->setUtilisateur($utilisateur);
 
-    //         $entityManager->persist($book);
-    //     }
+            $entityManager->persist($book);
+        }
 
-    //     $entityManager->flush();
+        $entityManager->flush();
 
-    //     $this->addFlash('success', 'Livres ajoutés avec succès.');
-    //     return $this->redirectToRoute('homepage');
-    // }
+        $this->addFlash('success', 'Livres ajoutés avec succès.');
+        return  var_dump($bookDetails);
+    }
 }

@@ -44,9 +44,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     private ?string $email = null;
 
     /**
-     * @var Collection<int, book>
+     * @var Collection<int, Book>
      */
-    #[ORM\OneToMany(targetEntity: book::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'utilisateur')]
     private Collection $user_books;
 
     public function __construct()
@@ -159,14 +159,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     }
 
     /**
-     * @return Collection<int, book>
+     * @return Collection<int, Book>
      */
     public function getUserBooks(): Collection
     {
         return $this->user_books;
     }
 
-    public function addUserBook(book $userBook): static
+    public function addUserBook(Book $userBook): static
     {
         if (!$this->user_books->contains($userBook)) {
             $this->user_books->add($userBook);
@@ -176,7 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function removeUserBook(book $userBook): static
+    public function removeUserBook(Book $userBook): static
     {
         if ($this->user_books->removeElement($userBook)) {
             // set the owning side to null (unless already changed)

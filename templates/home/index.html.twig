@@ -9,10 +9,11 @@
 		Kata Archive Books 📖 🦧📚</h1>
 	<!-- Search bar  -->
 	{% if app.user %}
-		<div class="form-container">
-			<form
-				class='form' method="post" action="">
-				{# <form class='form' method="post" action="{{ path('add_book') }}"> #}
+		<div
+			class="form-container">
+
+			{# class='form' method="post" action=""> #}
+			<form class='form' method="post" action="{{ path('add_book') }}">
 				<div class="form-field">
 					<label class="input-group__label">Titre</label>
 					<input class="input-group__input" type="text" name="search" placeholder=""/>
