@@ -15,23 +15,7 @@ class BookType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('author')
-            ->add('publishedAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('isbn')
-            ->add('slug')
-            ->add('utilisateur', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
-        ;
+            ->add('author');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

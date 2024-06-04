@@ -68,11 +68,16 @@ class HomeController extends AbstractController
         var_dump($bookDetails);
         foreach ($bookDetails as $bookData) {
             $book = new Book();
+            dump($bookData);
             $book->setTitle($bookData['title']);
 
             $book->setAuthor($bookData['authors'] ?? 'Auteur inconnu');
             $book->setUtilisateur($utilisateur);
-
+            $book->setIsbn($bookData['industryIdentifiers'][0]['identifier'] ?? null);
+            $book->setSlug($bookData['title']);
+            $book->setPublishedAt(new \DateTimeImmutable($bookData['publishedDate'] ?? 'now'));
+            $book->setCreatedAt(new \DateTimeImmutable());
+            $book->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($book);
         }
 

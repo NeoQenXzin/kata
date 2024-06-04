@@ -24,7 +24,7 @@ class GoogleBooksApiService
             [
                 'query' => [
                     'q' => 'intitle:' . urlencode($title) . '+inauthor:' . urlencode($author),
-                    // 'key' => $this->apiKey,
+                    'key' => $this->apiKey,
                     'maxResults' => 10, // Augmentez le nombre de résultats récupérés pour avoir plus de choix
                     'langRestrict' => 'fr'
                 ]
